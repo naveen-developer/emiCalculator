@@ -1,6 +1,7 @@
 const loanAmountInput = document.querySelector(".loan-amount");
 const interestRateInput = document.querySelector(".interest-rate");
 const loanTenureInput = document.querySelector(".loan-tenure");
+const hikeEMI = document.querySelector(".hike-emi");
 
 const loanEMIValue = document.querySelector(".loan-emi .value");
 const totalInterestValue = document.querySelector(".total-interest .value");
@@ -22,6 +23,8 @@ tableDiv.style.display = 'none';
 
 let prepayment = document.getElementById('prepayment');
 prepayment.style.display = 'none';
+
+
 
 let myChart;
 
@@ -72,6 +75,7 @@ const refreshInputValues = () => {
   loanAmount = parseFloat(loanAmountInput.value);
   interestRate = parseFloat(interestRateInput.value);
   loanTenure = parseFloat(loanTenureInput.value);
+  let hike_EMI_Value = parseFloat(hikeEMI.value);
   interest = interestRate / 12 / 100;
 };
 
@@ -116,8 +120,8 @@ let emi = calculateEMI();
 
 table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Interest</th><th>Outstanding Loan</th></tr></thead><tbody></tbody>'; 
 
-
   for(let i=1; i<=loanTenure; i++){
+
 
   let finalinterest = loanAmount*interest;
   let towards_loan = emi - finalinterest;
@@ -149,44 +153,49 @@ table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Int
 
 
 const smartDisplayTable = () => {
+
+//debugger;
+
+let hike_EMI_Value = hikeEMI.value
+
 let emi = calculateEMI();
 
   let table = '';
   table += '<table>';
 
-  let j = 0;
-  let k = 0;
 
 
 table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Interest</th><th>Outstanding Loan</th><th>Prepayment</th></tr></thead><tbody id="myTbody"></tbody>'; 
 
 
+
   for(let i=1; i<=loanTenure; i++){
 
   let finalinterest = loanAmount*interest;
-  let towards_loan = emi - finalinterest;
   let outstanding_loan = loanAmount;
 
-
   let prepayment = 0;
-  let prepayment1 = 0;
+    let prepayment1 = 0;
 
-
-  if(i == 12 || j == 12){
+  if(i%12 == 0){
     prepayment = emi;
-    j=0
   }
 
-  if(i==13 || k == 12){
+
+  if(i%13 == 0){
+    let percentage = emi*hike_EMI_Value/100;
     prepayment1 = emi;
-    k=0 
+    emi = emi+percentage    
   }
 
-  j++;
-  k++;
+  let towards_loan = emi - finalinterest;
 
-      outstanding_loan = outstanding_loan - (prepayment1+towards_loan)
 
+if(i%14==0){
+  prepayment1 = 0;
+}
+
+  outstanding_loan = outstanding_loan - (prepayment1+towards_loan)
 
     table += '<tr>';
     table += '<td>'+i;
@@ -203,8 +212,6 @@ table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Int
     table += '</td>';        
     table += '</tr>';
 
-
-
     loanAmount = outstanding_loan;
 
 
@@ -220,7 +227,7 @@ let init = () => {
   updateData(emi);
 }
 
-init();
+  init()
 
 calculateBtn.addEventListener("click", () => {
 

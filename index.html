@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>EMI Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -25,12 +26,17 @@
 
           <div class="group">
             <div class="title">Tenure (In Months)</div>
-            <input type="text" value="60" class="loan-tenure" />
+            <input type="text" value="24" class="loan-tenure" />
           </div>
           <div class="group" id="prepayment">
             <div class="title">Extra EMI (Every Year)</div>
-            <input type="text" value="1" class="loan-tenure" disabled />
+            <input type="text" value="1" class="extra-emi" disabled />
           </div>
+          <div class="group hike_emi" id="hike_emi prepayment">
+             <i class="fa fa-percent icon" aria-hidden="true"></i>
+            <div class="title">Hike EMI (Every Year)</div>
+            <input type="text" value="10" class="hike-emi"  />
+          </div>          
         </form>
       </div>
 
