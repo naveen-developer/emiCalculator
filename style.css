@@ -118,6 +118,12 @@ th, td{
 }
 
 @media (max-width: 650px) {
+  
+
+  .loan-calculator .result .left {
+    padding: 8px 10px;
+}
+
   .loan-calculator {
     width: 90%;
     max-width: 500px;
@@ -131,5 +137,13 @@ th, td{
   .loan-calculator .result {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-width: 450px) {
+  
+  .loan-calculator .result .left {
+    padding: 10px 0px;
+    font-size: 11px;
   }
 }
