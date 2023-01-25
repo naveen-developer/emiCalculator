@@ -16,7 +16,7 @@
         <form action="#">
           <div class="group">
             <div class="title">Amount</div>
-            <input type="text" value="100000" class="loan-amount" />
+            <input type="text" value="100000" class="loan-amount"   />
           </div>
 
           <div class="group">
@@ -28,11 +28,11 @@
             <div class="title">Tenure (In Months)</div>
             <input type="text" value="24" class="loan-tenure" />
           </div>
-          <div class="group" id="prepayment">
+          <div class="group prepayment" id="prepayment">
             <div class="title">Extra EMI (Every Year)</div>
             <input type="text" value="1" class="extra-emi" disabled />
           </div>
-          <div class="group hike_emi" id="hike_emi prepayment">
+          <div class="group hike_emi prepayment" id="prepayment">
              <i class="fa fa-percent icon" aria-hidden="true"></i>
             <div class="title">Hike EMI (Every Year)</div>
             <input type="text" value="10" class="hike-emi"  />
@@ -85,6 +85,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.2/dist/chart.min.js"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

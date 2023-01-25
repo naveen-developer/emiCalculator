@@ -21,9 +21,9 @@ let myTable = document.getElementById("data");
 let tableDiv = document.getElementById('tableDiv');
 tableDiv.style.display = 'none';
 
-let prepayment = document.getElementById('prepayment');
-prepayment.style.display = 'none';
-
+let prepayment = document.querySelectorAll('.prepayment');
+prepayment[0].style.display = 'none'
+prepayment[1].style.display = 'none'
 
 
 let myChart;
@@ -106,6 +106,40 @@ const updateData = (emi) => {
     displayChart(totalInterestPayable);
   }
 };
+
+
+// const myFunction = () => {
+//    let a = document.querySelector(".loan-amount");  
+//    let b = parseInt(a.value).toLocaleString("en-IN");
+//        a.value = b;
+// }
+
+
+
+function updateTextView(_obj){
+  var num = getNumber(_obj.val());
+  if(num==0){
+    _obj.val('');
+  }else{
+    _obj.val(num.toLocaleString("en-IN"));
+  }
+}
+function getNumber(_str){
+  var arr = _str.split('');
+  var out = new Array();
+  for(var cnt=0;cnt<arr.length;cnt++){
+    if(isNaN(arr[cnt])==false){
+      out.push(arr[cnt]);
+    }
+  }
+  return Number(out.join(''));
+}
+$(document).ready(function(){
+  $('input[type=text]').on('keyup',function(){
+    updateTextView($(this));
+  });
+});
+
 
 
 const normalDisplayTable = () => {
@@ -230,7 +264,8 @@ let init = () => {
   init()
 
 calculateBtn.addEventListener("click", () => {
-
+prepayment[0].style.display = 'none';
+prepayment[1].style.display = 'none';
   init()  
   tableDiv.style.display = 'block';
   normalDisplayTable();
@@ -239,7 +274,8 @@ calculateBtn.addEventListener("click", () => {
 
 
 smartPayBtn.addEventListener("click", () => {
-prepayment.style.display = 'block';
+prepayment[0].style.display = 'block';
+prepayment[1].style.display = 'block';  
   init();
   tableDiv.style.display = 'block';
   smartDisplayTable();  
