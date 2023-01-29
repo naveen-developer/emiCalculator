@@ -10,7 +10,13 @@ const totalAmountValue = document.querySelector(".total-amount .value");
 const calculateBtn = document.querySelector(".calculate-btn");
 const smartPayBtn = document.querySelector(".smartpay-btn");
 
+
+
+//let number = loanAmountInput.value.replace(/\,/g,'')
+
 let loanAmount = parseFloat(loanAmountInput.value);
+
+
 let interestRate = parseFloat(interestRateInput.value);
 let loanTenure = parseFloat(loanTenureInput.value);
 
@@ -67,7 +73,7 @@ const displayChart = (totalInterestPayableValue) => {
 
 const updateChart = (totalInterestPayableValue) => {
   myChart.data.datasets[0].data[0] = totalInterestPayableValue;
-  myChart.data.datasets[0].data[1] = loanAmount;
+  myChart.data.datasets[0].data[1] = loanAmountInput.value;
   myChart.update();
 };
 
@@ -91,14 +97,17 @@ const calculateEMI = () => {
   return emi;
 };
 
+let totalInterestPayable = 0;
+let totalAmount = 0;
+
 const updateData = (emi) => {
-  loanEMIValue.innerHTML = Math.round(emi).toLocaleString('en-IN');;
+  loanEMIValue.innerHTML = Math.round(emi).toLocaleString('en-IN');
 
-  let totalAmount = Math.round(loanTenure * emi);
-  totalAmountValue.innerHTML = totalAmount.toLocaleString('en-IN');;
+  totalAmount = Math.round(loanTenure * emi);
+  totalAmountValue.innerHTML = totalAmount.toLocaleString('en-IN');
 
-  let totalInterestPayable = Math.round(totalAmount - loanAmount);
-  totalInterestValue.innerHTML = totalInterestPayable.toLocaleString('en-IN');;
+  totalInterestPayable = Math.round(totalAmount - loanAmount);
+  totalInterestValue.innerHTML = totalInterestPayable.toLocaleString('en-IN');
 
   if (myChart) {
     updateChart(totalInterestPayable);
@@ -115,30 +124,60 @@ const updateData = (emi) => {
 // }
 
 
+// function formatIndianNumber(number) {
+//   return number.toLocaleString("en-IN");
+// }
 
-function updateTextView(_obj){
-  var num = getNumber(_obj.val());
-  if(num==0){
-    _obj.val('');
-  }else{
-    _obj.val(num.toLocaleString("en-IN"));
-  }
-}
-function getNumber(_str){
-  var arr = _str.split('');
-  var out = new Array();
-  for(var cnt=0;cnt<arr.length;cnt++){
-    if(isNaN(arr[cnt])==false){
-      out.push(arr[cnt]);
-    }
-  }
-  return Number(out.join(''));
-}
-$(document).ready(function(){
-  $('input[type=text]').on('keyup',function(){
-    updateTextView($(this));
-  });
-});
+// //console.log(formatIndianNumber(123456.789)); 
+
+// document.getElementById("input").addEventListener("keyup", function(event) {
+//   console.log(e.preventDefault());
+//   event.preventDefault();
+//      if(this.value == ""){
+//       console.log("empty number")
+//      }else{
+//            this.value = formatIndianNumber(parseInt(this.value));
+//      console.log(this.value)      
+//      }
+
+// });
+
+
+
+  //    $(function() {
+  //      $(".loan-amount").focus();
+  //      let number =  $(".loan-amount").val();
+  //      let number1 = parseInt(number).toLocaleString("en-IN");
+  //      console.log("number "+number1+" number1 "+number1);
+  //      $(".loan-amount").val(number1);
+  //    });
+
+
+  // function updateTextView(_obj){
+  //   var num = getNumber(_obj.val());
+  //   console.log(num);
+  //   if(num==0){
+  //     _obj.val('');
+  //   }else{
+  //     _obj.val(num.toLocaleString("en-IN"));
+  //   }
+  // }
+  // function getNumber(_str){
+  //   var arr = _str.split('');
+  //   var out = new Array();
+  //   for(var cnt=0;cnt<arr.length;cnt++){
+  //     if(isNaN(arr[cnt])==false){
+  //       out.push(arr[cnt]);
+  //     }
+  //   }
+  //   return Number(out.join(''));
+  // }
+  // $(document).ready(function(){
+  //   $('input[type=text]').on('keyup',function(){
+  //     updateTextView($(this));
+  //     //console.log(this)
+  //   });
+  // });
 
 
 
@@ -157,8 +196,8 @@ table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Int
   for(let i=1; i<=loanTenure; i++){
 
 
-  let finalinterest = loanAmount*interest;
-  let towards_loan = emi - finalinterest;
+  let towards_interest = loanAmount*interest;
+  let towards_loan = emi - towards_interest;
   let outstanding_loan = loanAmount;
 
       outstanding_loan = outstanding_loan - towards_loan
@@ -166,13 +205,13 @@ table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Int
     table += '<tr>';
     table += '<td>'+i;
     table += '</td>';
-    table += '<td>'+Math.round(emi);
+    table += '<td>'+Math.round(emi).toLocaleString('en-IN');
     table += '</td>';
-    table += '<td>'+Math.max(0, Math.round(towards_loan));
+    table += '<td>'+Math.max(0, Math.round(towards_loan)).toLocaleString('en-IN');
     table += '</td>';
-    table += '<td>'+Math.max(0, Math.round(finalinterest));
+    table += '<td>'+Math.max(0, Math.round(towards_interest)).toLocaleString('en-IN');
     table += '</td>'; 
-    table += '<td>'+Math.max(0, Math.round(outstanding_loan));
+    table += '<td>'+Math.max(0, Math.round(outstanding_loan)).toLocaleString('en-IN');
     table += '</td>'; 
     table += '</tr>';
 
@@ -187,72 +226,101 @@ table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Int
 
 
 const smartDisplayTable = () => {
-
-//debugger;
-
 let hike_EMI_Value = hikeEMI.value
-
 let emi = calculateEMI();
+let hike_emi = emi;
+let total_towards_interest = 0;
 
   let table = '';
   table += '<table>';
-
+  let prepayment1 = 0;
+  let j=0;
 
 
 table += '<thead><tr><th>Sr</th><th>EMI</th><th>Towards Loan</th><th>Towards Interest</th><th>Outstanding Loan</th><th>Prepayment</th></tr></thead><tbody id="myTbody"></tbody>'; 
 
-
-
   for(let i=1; i<=loanTenure; i++){
 
-  let finalinterest = loanAmount*interest;
-  let outstanding_loan = loanAmount;
+//debugger;
+
 
   let prepayment = 0;
-    let prepayment1 = 0;
+  let towards_interest = loanAmount*interest;
+  
+  let outstanding_loan = loanAmount;
+
+
+
 
   if(i%12 == 0){
     prepayment = emi;
   }
 
+   
 
-  if(i%13 == 0){
-    let percentage = emi*hike_EMI_Value/100;
-    prepayment1 = emi;
-    emi = emi+percentage    
+  if(i == 13 || j == 13){
+//console.log("i value "+i)
+    let percentage = hike_emi*hike_EMI_Value/100;
+    hike_emi = hike_emi+percentage;
+    j=1;   
   }
 
-  let towards_loan = emi - finalinterest;
+  j++;
+
+let towards_loan = hike_emi - towards_interest;  
+outstanding_loan = outstanding_loan - (towards_loan+prepayment1);
+  
 
 
-if(i%14==0){
-  prepayment1 = 0;
-}
+  if(towards_interest <= 0){
 
-  outstanding_loan = outstanding_loan - (prepayment1+towards_loan)
+    hike_emi = 0;
+    towards_loan = 0;
+    towards_interest = 0;
+    prepayment = 0;
+  }
+
+  total_towards_interest += towards_interest;
+
 
     table += '<tr>';
     table += '<td>'+i;
     table += '</td>';
-    table += '<td>'+Math.round(emi);
+    table += '<td>'+Math.round(hike_emi).toLocaleString('en-IN');
     table += '</td>';
-    table += '<td>'+Math.max(0, Math.round(towards_loan));
+    table += '<td>'+Math.max(0, Math.round(towards_loan)).toLocaleString('en-IN');
     table += '</td>';
-    table += '<td>'+Math.max(0, Math.round(finalinterest));
+    table += '<td>'+Math.max(0, Math.round(towards_interest)).toLocaleString('en-IN');
     table += '</td>'; 
-    table += '<td>'+Math.max(0, Math.round(outstanding_loan));
+    table += '<td>'+Math.max(0, Math.round(outstanding_loan)).toLocaleString('en-IN');
     table += '</td>'; 
-    table += '<td>'+Math.round(prepayment);
-    table += '</td>';        
+    table += '<td>'+Math.max(0, Math.round(prepayment)).toLocaleString('en-IN');
+    table += '</td>';     
     table += '</tr>';
 
+    
+    prepayment1 = prepayment;
     loanAmount = outstanding_loan;
 
-
   }
+
+
+
   table += '</tbody></table>';
   myTable.innerHTML = table;
+
+
+  document.querySelectorAll(".value")[1].innerHTML = "<del style='color:gray'>"+totalInterestPayable.toLocaleString('en-IN')+"</del><span> </span>"+Math.round(total_towards_interest).toLocaleString('en-IN');
+  document.querySelectorAll(".value")[2].innerHTML = "<del style='color:gray'>"+totalAmount.toLocaleString('en-IN')+"</del><span> </span>"+Math.round(total_towards_interest+parseInt(loanAmountInput.value)).toLocaleString('en-IN');
+
+ if (myChart) {
+    updateChart(Math.round(total_towards_interest));
+  } else {
+    displayChart(Math.round(total_towards_interest));
+  }
+console.log(myChart);
 }
+
 
 
 
